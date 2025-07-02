@@ -9,8 +9,11 @@ load_dotenv()
 app = FastAPI()
 API_KEY = os.getenv("OPENROUTER_API_KEY")
 
-# Charger licences valides
-with open("license.txt") as f:
+# Récupérer le chemin absolu du dossier courant (celui de ce fichier)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Charger les licences valides depuis license.txt dans ce dossier
+with open(os.path.join(BASE_DIR, "license.txt")) as f:
     VALID_LICENSES = set(line.strip() for line in f)
 
 class LicenseCheck(BaseModel):
