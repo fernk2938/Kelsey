@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wum AI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="license-screen">
+    <h1>Wum AI</h1>
+    <input id="license-input" placeholder="Entrez votre licence">
+    <button id="license-btn">Valider</button>
+    <p class="link" id="legal">Mention légale</p>
+    <a href="https://discord.gg/R2V2Acmb" id="discord-btn" target="_blank">Discord</a>
+  </div>
+
+  <div id="chat-screen" style="display:none;">
+    <header>
+      <span>Wum</span>
+      <div>
+        <button id="mode-btn">Mode: Normal</button>
+        <button id="leave-btn">Leave</button>
+      </div>
+    </header>
+    <div id="chat-window"></div>
+    <textarea id="chat-input" placeholder="Votre message..."></textarea>
+    <button id="send-btn">Envoyer</button>
+    <input id="web-search-input" placeholder="Recherche web...">
+    <button id="web-search-btn">Recherche Web</button>
+    <a href="https://discord.gg/R2V2Acmb" id="discord-quick" class="highlight">Discord</a>
+  </div>
+
+  <!-- Mention légale popup -->
+  <div id="modal-legal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span id="close-modal" style="cursor:pointer;">&times;</span>
+      <div id="legal-content"></div>
+    </div>
+  </div>
+
+  <script>
+    // Chargement dynamique du contenu légal depuis un fichier legal.html
+    document.getElementById('legal').addEventListener('click', async () => {
+      const modal = document.getElementById('modal-legal');
+      const legalContent = document.getElementById('legal-content');
+
+      try {
+        const response = await fetch('legal.html');
+        if (!response.ok) throw new Error('Erreur lors du chargement du contenu légal.');
+        legalContent.innerHTML = await response.text();
+      } catch (e) {
+        legalContent.innerHTML = `<p>${e.message}</p>`;
+      }
+      modal.style.display = 'block';
+    });
+
+    // Fermer le modal quand on clique sur la croix
+    document.getElementById('close-modal').addEventListener('click', () => {
+      document.getElementById('modal-legal').style.display = 'none';
+    });
+
+    // Optionnel : fermer le modal si on clique en dehors du contenu
+    window.onclick = function(event) {
+      const modal = document.getElementById('modal-legal');
+      if (event.target == modal) {
+        modal.style.display = 'none';
+      }
+    }
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>
