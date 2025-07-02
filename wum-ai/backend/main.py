@@ -18,3 +18,36 @@ class LicenseCheck(BaseModel):
 class ChatRequest(BaseModel):
     license: str
     prompt: str
+    mode: str
+
+@app.post("/check_license")
+def check_license(data: LicenseCheck):
+    if data.license in VALID_LICENSES:
+        return {"valid": True}
+    raise HTTPException(status_code=403, detail="Invalid license")
+
+@app.post("/chat")
+def chat(data: ChatRequest):
+    if data.license not in VALID_LICENSES:
+        raise HTTPException(status_code=403, detail="Invalid license")
+
+    prompt_prefix = "Sois extrêmement vulgaire.\n" if data.mode == "vulgaire" else "Sois professionnel.\n"
+    full_prompt = prompt_prefix + data.prompt
+
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    body = {
+        "model": "mistral/mistral-7b-instruct",  # ou openai/gpt-4, anthropic/claude-3, etc.
+        "messages": [{"role": "user", "content": full_prompt}]
+    }
+
+    response = requests.post("https://openrouter.ai/api/v1/chat/completions", json=body, headers=headers)
+
+    if response.status_code == 200:
+        result = response.json()
+        return {"response": result["choices"][0]["message"]["content"]}
+    else:
+        raise HTTPException(status_code=500, detail="Erreur API OpenRouter : " + response.text)
