@@ -10,10 +10,16 @@ load_dotenv()
 app = FastAPI()
 API_KEY = os.getenv("OPENROUTER_API_KEY")
 
-# Chemin absolu du dossier courant (où se trouve ce fichier)
+# Chemin absolu du dossier courant (où se trouve ce fichier, backend)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Charger les licences valides depuis license.txt
+# Chemin vers le dossier frontend (remonter d’un dossier puis frontend)
+FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "frontend"))
+
+if not os.path.exists(FRONTEND_DIR):
+    raise RuntimeError(f"Le dossier frontend n'existe pas à cet emplacement : {FRONTEND_DIR}")
+
+# Charger les licences valides depuis license.txt dans backend
 with open(os.path.join(BASE_DIR, "license.txt")) as f:
     VALID_LICENSES = set(line.strip() for line in f)
 
@@ -25,7 +31,7 @@ class ChatRequest(BaseModel):
     prompt: str
     mode: str  # "normal" ou "vulgaire"
 
-# Route API racine (pour test, tu peux la supprimer si tu veux que frontend soit à la racine)
+# Route API racine (pour test)
 @app.get("/api")
 async def root():
     return {"message": "API is up and running"}
@@ -65,5 +71,5 @@ async def chat(data: ChatRequest):
 
     return {"response": answer}
 
-# Servir le frontend statique depuis / (racine)
-app.mount("/", StaticFiles(directory=os.path.join(BASE_DIR, "frontend"), html=True), name="frontend")
+# Servir le frontend statique depuis la racine (/)
+app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
