@@ -1,0 +1,48 @@
+body {
+  background: #000;
+  color: #0f0;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+#license-screen, #chat-screen {
+  padding: 20px;
+  text-align: center;
+}
+input, textarea, button {
+  padding: 10px;
+  margin: 5px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+}
+#discord-btn, #discord-quick {
+  background: #111;
+  border: 2px solid #0f0;
+  color: #0f0;
+  padding: 10px;
+  display: inline-block;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+#chat-window {
+  background: #111;
+  padding: 15px;
+  height: 300px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+.modal {
+  display: none;
+  position: fixed;
+  background: rgba(0,0,0,0.9);
+  top: 0; left: 0; right: 0; bottom: 0;
+  justify-content: center;
+  align-items: center;
+}
+.modal-content {
+  background: #222;
+  padding: 20px;
+  border: 1px solid #0f0;
+}
